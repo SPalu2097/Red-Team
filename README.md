@@ -1,4 +1,4 @@
-# 🚀 IT-süsteemide ja küberturbe portfoolio
+# IT-süsteemide ja küberturbe portfoolio
 
 Tere tulemast minu portfooliosse!
 
@@ -6,7 +6,7 @@ Siit leiad ülevaate minu huvist IT ja küberturbe vastu ning praktilistest proj
 
 Minu eesmärk on õppida pidevalt juurde, omandada praktilisi kogemusi ning arendada oskusi, mis aitavad kaasa turvalisemate ja töökindlamate IT-süsteemide loomisele.
 
-## 🛠️ Oskused ja kogemused
+## Tööriistad
 
 ### Kasutan
 
@@ -17,7 +17,7 @@ Minu eesmärk on õppida pidevalt juurde, omandada praktilisi kogemusi ning aren
 * VirtualBoxi test- ja õppekeskkondade loomiseks
 * Ollamat ja kohalikke AI-tööriistu arenduse toetamiseks
 
-### Olen teinud
+### Kogemused
 
 * Loonud isoleeritud küberturbe testlabori virtuaalmasinate abil
 * Analüüsinud võrguliiklust ja katsetanud erinevaid võrgulahendusi
