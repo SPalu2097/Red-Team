@@ -1,0 +1,359 @@
+[
+  {
+    "id": 1781115054468,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:10:54.468Z"
+  },
+  {
+    "id": 1781115044421,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:10:44.421Z"
+  },
+  {
+    "id": 1781115034361,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:10:34.361Z"
+  },
+  {
+    "id": 1781115024293,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:10:24.293Z"
+  },
+  {
+    "id": 1781115014241,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:10:14.241Z"
+  },
+  {
+    "id": 1781115004197,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:10:04.197Z"
+  },
+  {
+    "id": 1781114994148,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:09:54.148Z"
+  },
+  {
+    "id": 1781114984101,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:09:44.101Z"
+  },
+  {
+    "id": 1781114974053,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:09:34.053Z"
+  },
+  {
+    "id": 1781114964008,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:09:24.008Z"
+  },
+  {
+    "id": 1781114953953,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:09:13.953Z"
+  },
+  {
+    "id": 1781114943908,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:09:03.908Z"
+  },
+  {
+    "id": 1781114933862,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:08:53.862Z"
+  },
+  {
+    "id": 1781114923815,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:08:43.815Z"
+  },
+  {
+    "id": 1781114913768,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:08:33.768Z"
+  },
+  {
+    "id": 1781114903718,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:08:23.718Z"
+  },
+  {
+    "id": 1781114893666,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:08:13.666Z"
+  },
+  {
+    "id": 1781114883613,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:08:03.613Z"
+  },
+  {
+    "id": 1781114873565,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:07:53.565Z"
+  },
+  {
+    "id": 1781114863517,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:07:43.517Z"
+  },
+  {
+    "id": 1781114853470,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:07:33.470Z"
+  },
+  {
+    "id": 1781114843424,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:07:23.424Z"
+  },
+  {
+    "id": 1781114833373,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:07:13.373Z"
+  },
+  {
+    "id": 1781114823327,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:07:03.327Z"
+  },
+  {
+    "id": 1781114813281,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:06:53.281Z"
+  },
+  {
+    "id": 1781114803232,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:06:43.232Z"
+  },
+  {
+    "id": 1781114793184,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:06:33.184Z"
+  },
+  {
+    "id": 1781114783136,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:06:23.136Z"
+  },
+  {
+    "id": 1781114773091,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:06:13.091Z"
+  },
+  {
+    "id": 1781114763044,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:06:03.044Z"
+  },
+  {
+    "id": 1781114752986,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:05:52.986Z"
+  },
+  {
+    "id": 1781114742943,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:05:42.943Z"
+  },
+  {
+    "id": 1781114732894,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:05:32.894Z"
+  },
+  {
+    "id": 1781114722845,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:05:22.845Z"
+  },
+  {
+    "id": 1781114712801,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:05:12.801Z"
+  },
+  {
+    "id": 1781114702753,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:05:02.753Z"
+  },
+  {
+    "id": 1781114692707,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:04:52.707Z"
+  },
+  {
+    "id": 1781114682661,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:04:42.661Z"
+  },
+  {
+    "id": 1781114672605,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:04:32.605Z"
+  },
+  {
+    "id": 1781114662557,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:04:22.557Z"
+  },
+  {
+    "id": 1781114652507,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:04:12.507Z"
+  },
+  {
+    "id": 1781114642462,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:04:02.462Z"
+  },
+  {
+    "id": 1781114632414,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:03:52.414Z"
+  },
+  {
+    "id": 1781114622366,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:03:42.366Z"
+  },
+  {
+    "id": 1781114612318,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:03:32.318Z"
+  },
+  {
+    "id": 1781114602262,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:03:22.262Z"
+  },
+  {
+    "id": 1781114592178,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:03:12.178Z"
+  },
+  {
+    "id": 1781114582089,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:03:02.089Z"
+  },
+  {
+    "id": 1781114571999,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:02:51.999Z"
+  },
+  {
+    "id": 1781114561950,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:02:41.950Z"
+  },
+  {
+    "id": 1781114551838,
+    "temperature": 33.8,
+    "humidity": 34,
+    "device": "ESP8266-D1",
+    "timestamp": "2026-06-10T18:02:31.838Z"
+  }
+]

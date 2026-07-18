@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ESP8266 Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: radial-gradient(circle at top, #0a0f0a, #000);
+      color: #00ff88;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 15px;
+      margin-bottom: 0;
+      letter-spacing: 2px;
+    }
+
+    #status {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 10px;
+    }
+
+    .card {
+      width: 180px;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(0,255,136,0.08);
+      border: 1px solid rgba(0,255,136,0.25);
+      box-shadow: 0 0 15px rgba(0,255,136,0.1);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .value {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .charts {
+      width: 95%;
+      max-width: 1000px;
+      margin: 20px auto;
+    }
+
+    canvas {
+      margin-top: 15px;
+      background: rgba(0,255,136,0.03);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .live {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1> ESP8266 LIVE DASHBOARD</h1>
+
+<div id="status">
+  Status: <span id="dot">⚪</span> <span id="text">checking...</span>
+</div>
+
+<div class="container" id="cards"></div>
+
+<div class="charts">
+  <canvas id="tempChart"></canvas>
+  <canvas id="humChart"></canvas>
+</div>
+
+<script>
+let tempChart;
+let humChart;
+
+async function loadData() {
+  try {
+    const res = await fetch("/api/data");
+    const data = await res.json();
+
+    const container = document.getElementById("cards");
+    container.innerHTML = "";
+
+    const latest = data[data.length - 1];
+
+    // 🟢 CARDS
+    if (latest) {
+      container.innerHTML = `
+        <div class="card">
+          <div>🌡 Temp</div>
+          <div class="value">${latest.temperature} °C</div>
+        </div>
+
+        <div class="card">
+          <div>💧 Humidity</div>
+          <div class="value">${latest.humidity} %</div>
+        </div>
+
+        <div class="card">
+          <div>📟 Device</div>
+          <div class="value">${latest.device}</div>
+        </div>
+
+        <div class="card">
+          <div>⏱ Last Update</div>
+          <div class="value" style="font-size:14px">
+            ${new Date(latest.timestamp).toLocaleTimeString()}
+          </div>
+        </div>
+      `;
+    }
+
+    // 📊 DATA PREP
+    const labels = [];
+    const temps = [];
+    const hums = [];
+
+    data.slice(-25).forEach(d => {
+      labels.push(new Date(d.timestamp).toLocaleTimeString());
+      temps.push(d.temperature);
+      hums.push(d.humidity);
+    });
+
+    // 🌡 TEMP CHART
+    if (!tempChart) {
+      tempChart = new Chart(document.getElementById("tempChart"), {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            label: "Temperature (°C)",
+            data: temps,
+            borderColor: "#00ff88",
+            backgroundColor: "rgba(0,255,136,0.08)",
+            tension: 0.35
+          }]
+        },
+        options: chartOptions("#00ff88")
+      });
+    } else {
+      tempChart.data.labels = labels;
+      tempChart.data.datasets[0].data = temps;
+      tempChart.update();
+    }
+
+    // 💧 HUMIDITY CHART (RED ALERT > 40%)
+    const humColor = Math.max(...hums) > 40 ? "#ff3b3b" : "#00ff88";
+
+    if (!humChart) {
+      humChart = new Chart(document.getElementById("humChart"), {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            label: "Humidity (%)",
+            data: hums,
+            borderColor: humColor,
+            backgroundColor: "rgba(255,255,255,0.03)",
+            tension: 0.35
+          }]
+        },
+        options: chartOptions(humColor)
+      });
+    } else {
+      humChart.data.labels = labels;
+      humChart.data.datasets[0].data = hums;
+      humChart.data.datasets[0].borderColor =
+        Math.max(...hums) > 40 ? "#ff3b3b" : "#00ff88";
+
+      humChart.update();
+    }
+
+    // 🟢 LIVE STATUS
+    if (latest) {
+      const diff = Date.now() - new Date(latest.timestamp).getTime();
+
+      if (diff < 10000) {
+        document.getElementById("dot").innerText = "🟢";
+        document.getElementById("text").innerText = "LIVE";
+        document.getElementById("text").style.color = "#00ff88";
+      } else {
+        document.getElementById("dot").innerText = "🔴";
+        document.getElementById("text").innerText = "OFFLINE";
+        document.getElementById("text").style.color = "#ff3b3b";
+      }
+    }
+
+  } catch (err) {
+    console.error("Fetch error:", err);
+  }
+}
+
+// 🎨 shared chart style
+function chartOptions(color) {
+  return {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: { color }
+      }
+    },
+    scales: {
+      x: { ticks: { color } },
+      y: { ticks: { color } }
+    }
+  };
+}
+
+loadData();
+setInterval(loadData, 3000);
+</script>
+
+</body>
+</html>

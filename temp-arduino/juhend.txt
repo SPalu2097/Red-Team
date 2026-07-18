@@ -1,0 +1,1 @@
+Käivita käsk CMD-s: npm install express cors siis node server.js ja siis vaata port 3000
