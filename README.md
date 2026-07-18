@@ -1,47 +1,53 @@
-# 🚀 IT Systems Specialist & Security Researcher Portfolio
+# 🚀 IT-süsteemide spetsialisti ja turvauurija portfoolio
 
-Professional Junior Specialist in IT Systems with a deep focus on offensive security, network traffic analysis, and hardware prototyping. Experienced in building isolated security labs, deploying hardware-based monitoring solutions, and analyzing network protocols.
-
----
-
-## 🛠️ Technical Skill Set
-
-*   **Operating Systems:** Kali Linux (Primary OS), Debian, Whonix
-*   **Networking & Analysis:** Wireshark, Scapy, PCAP/PCAPNG parsing, routing isolation, network privacy, Man-in-the-Middle (MitM) architecture
-*   **Hardware & Wireless:** Raspberry Pi 5, ESP8266, HackRF One + PortaPack H2, RF signal monitoring, DHT11 sensors
-*   **Security Frameworks:** Red Teaming strategies, penetration testing methodologies, open-source intelligence (OSINT) operational security via Tor/Whonix
-*   **Development & AI Automation:** Python, Local AI deployment (Ollama), embedded C++ (Arduino), offline AI dev environment integration (VS Code + Continue)
+Professionaalne noorem IT-süsteemide spetsialist, kelle peamine fookus on ründaval küberturbel, võrguliikluse analüüsil ning riistvarapõhisel prototüüpimisel. Kogenud isoleeritud turvalaborite loomisel, riistvarapõhiste jälgimislahenduste juurutamisel ning võrguprotokollide analüüsimisel.
 
 ---
 
-## 📁 Key Projects
+## 🛠️ Tehnilised oskused
 
-### 1. Physical Man-in-the-Middle (MitM) IoT Capture Platform
-*   **Description:** Deployed a hardware-based rogue gateway platform to transparently intercept, log, and analyze network traffic emanating from household IoT devices.
-*   **Stack:** Raspberry Pi 5, custom routing rules, Linux networking stack.
-*   **Core Outcomes:** Successfully identified anomalous telemetry and unencrypted data streams from consumer smart home hardware using tailored network filters.
-
-### 2. Isolated Multi-VM Network Security Testing Lab
-*   **Description:** Designed and provisioned a highly secure, completely isolated multi-VM lab environment tailored for safe offensive security research and anonymous OSINT operations.
-*   **Stack:** Oracle VirtualBox, Kali Linux, Whonix-Gateway.
-*   **Core Outcomes:** Enforced strict network boundaries ensuring all traffic from the Kali Linux instance is explicitly tunneled through the Tor network via the Whonix-Gateway appliance, completely preventing host-level leaks.
-
-### 3. Micro-Controller Weather Monitoring Infrastructure
-*   **Description:** Built an end-to-end IoT telemetry framework to gather ambient environmental metrics and report them back to a central server.
-*   **Stack:** Arduino, ESP8266 Wi-Fi Chip, DHT11 Sensor, Debian Linux, JSON payload structures.
-*   **Core Outcomes:** Configured low-power micro-controllers to reliably capture thermal and humidity data, format it into structured JSON objects, and securely transmit it over the local network to an independent web server.
-
-### 4. Localized Offline AI Development Environment
-*   **Description:** Built a zero-telemetry, fully air-gapped coding assistant workflow to preserve operational privacy during code generation and analysis.
-*   **Stack:** Ollama, Visual Studio Code, Continue extension, VirtualBox host optimization.
-*   **Core Outcomes:** Eliminated external API dependencies by serving open-weights LLMs entirely locally, natively integrated directly into the IDE workflow.
+- **Operatsioonisüsteemid:** Kali Linux (peamine operatsioonisüsteem), Debian, Whonix
+- **Võrgundus ja analüüs:** Wireshark, Scapy, PCAP/PCAPNG analüüs, marsruutimise isoleerimine, võrguliikluse privaatsus, Man-in-the-Middle (MitM) arhitektuur
+- **Riistvara ja traadita tehnoloogiad:** Raspberry Pi 5, ESP8266, HackRF One + PortaPack H2, RF-signaalide jälgimine, DHT11 andurid
+- **Turberaamistikud:** Red Team strateegiad, läbitungimistestimise metoodikad, avatud allikate luure (OSINT) operatiivturve Tori ja Whonixi abil
+- **Arendus ja tehisintellekti automatiseerimine:** Python, lokaalne AI juurutamine (Ollama), sisseehitatud C++ (Arduino), võrguühenduseta AI-arenduskeskkonna integreerimine (VS Code + Continue)
 
 ---
 
-## 📡 Wireless & RF Exploration
-Active researcher in software-defined radio (SDR) ecosystems. Utilizing a **HackRF One with PortaPack H2** firmware for tracking, capturing, and conducting frequency analysis of local wireless signals, enhancing deep understanding of physical layer protocols and RF security risks.
+## 📁 Olulisemad projektid
+
+### 1. Riistvarapõhine Man-in-the-Middle (MitM) IoT liikluse kogumise platvorm
+
+- **Kirjeldus:** Juurutasin riistvarapõhise võltslüüsi (rogue gateway) lahenduse, mis võimaldas läbipaistvalt kinni püüda, logida ja analüüsida koduste IoT-seadmete võrguliiklust.
+- **Tehnoloogiad:** Raspberry Pi 5, kohandatud marsruutimisreeglid, Linuxi võrgustikupinu.
+- **Peamised tulemused:** Tuvastasin kohandatud võrgufiltrite abil tarbijatele mõeldud nutikoduseadmete ebatavalise telemeetria ning krüpteerimata andmevood.
+
+### 2. Isoleeritud mitme virtuaalmasinaga küberturbe testlabor
+
+- **Kirjeldus:** Kavandasin ja seadistasin täielikult isoleeritud ning kõrge turvalisusega mitme virtuaalmasinaga laborikeskkonna ründava küberturbe uurimiseks ja anonüümsete OSINT-operatsioonide läbiviimiseks.
+- **Tehnoloogiad:** Oracle VirtualBox, Kali Linux, Whonix-Gateway.
+- **Peamised tulemused:** Rakendasin ranged võrgupiirangud, mis tagasid, et kogu Kali Linuxi võrguliiklus suunatakse ainult läbi Tor-võrgu Whonix-Gateway kaudu, välistades täielikult hosttaseme andmelekked.
+
+### 3. Mikrokontrolleritel põhinev ilmaandmete jälgimise taristu
+
+- **Kirjeldus:** Lõin tervikliku IoT telemeetriaraamistiku keskkonnaandmete kogumiseks ja nende edastamiseks keskserverisse.
+- **Tehnoloogiad:** Arduino, ESP8266 Wi-Fi moodul, DHT11 andur, Debian Linux, JSON-andmestruktuurid.
+- **Peamised tulemused:** Seadistasin energiasäästlikud mikrokontrollerid usaldusväärselt koguma temperatuuri- ja õhuniiskusandmeid, vormindama need struktureeritud JSON-objektideks ning edastama need turvaliselt kohaliku võrgu kaudu sõltumatule veebiserverile.
+
+### 4. Lokaalne võrguühenduseta AI-arenduskeskkond
+
+- **Kirjeldus:** Lõin täielikult võrguühenduseta ja telemeetriavaba AI-põhise programmeerimisabilise töövoo, et tagada maksimaalne privaatsus koodi genereerimisel ja analüüsimisel.
+- **Tehnoloogiad:** Ollama, Visual Studio Code, Continue laiendus, VirtualBoxi hosti optimeerimine.
+- **Peamised tulemused:** Eemaldasin sõltuvuse välistest API-dest, käivitades avatud kaaludega keelemudelid täielikult lokaalselt ning integreerides need otse arenduskeskkonna töövoogu.
 
 ---
 
-## 🎯 Professional Focus
-Actively seeking strategic professional alignments, collaborations, and engineering roles within offensive security operations, threat hunting, and red team environments (such as national CERT operations). Focused on bridging the gap between low-level hardware interactions and robust enterprise network defense.
+## 📡 Traadita side ja RF-uuringud
+
+Tegelen aktiivselt tarkvaraliselt määratletud raadio (SDR) tehnoloogiate uurimisega. Kasutan **HackRF One** seadet koos **PortaPack H2** püsivaraga kohalike raadiosignaalide jälgimiseks, salvestamiseks ja sagedusanalüüsiks, et süvendada arusaamist füüsilise kihi protokollidest ning raadioside turvariskidest.
+
+---
+
+## 🎯 Professionaalne fookus
+
+Otsin aktiivselt võimalusi professionaalseks koostööks ning insenerirollideks ründava küberturbe, ohujahi (Threat Hunting) ja Red Team meeskondades, sealhulgas riiklikes CERT-organisatsioonides. Minu eesmärk on ühendada madala taseme riistvaralised teadmised tugeva ettevõttevõrkude kaitse ja küberturbe praktikatega.
