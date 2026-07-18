@@ -22,6 +22,6 @@ Minu eesmärk on õppida pidevalt juurde, omandada praktilisi kogemusi ning aren
 * Loonud isoleeritud küberturbe testlabori virtuaalmasinate abil
 * Analüüsinud võrguliiklust ja katsetanud erinevaid võrgulahendusi
 * Arendanud Raspberry Pi ja ESP8266 põhiseid IoT-projekte
-* Seadistanud lokaalse AI-arenduskeskkonna ilma pilveteenuseid kasutamata
+* Seadistanud lokaalse AI agendi ja proovinud õppinud AI-d rohkem tundma
 * Katsetanud SDR-tehnoloogiaid HackRF One seadmega
-* Tegelenud küberturbe, Linuxi ja võrgunduse iseseisva õppimise ning praktiliste projektidega
+* Põhiline rõhk on Red Team ja Offensive Security
