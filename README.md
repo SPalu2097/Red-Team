@@ -13,7 +13,7 @@ Siit leiad ülevaate minu huvist IT ja küberturbe vastu ning praktilistest proj
 * Raspberry Pi ja Arduino platvorme
 * Pythonit automatiseerimiseks ja väiksemate tööriistade loomiseks
 * VirtualBoxi test- ja õppekeskkondade loomiseks
-* Ollamat ja kohalikke AI-tööriistu arenduse toetamiseks
+* AI
 
 ### Kogemused
 
