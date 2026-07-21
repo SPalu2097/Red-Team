@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Team Tööriistakomplekti Dokumentatsioon</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans min-h-screen">
+
+    <header class="border-b border-gray-800 bg-gray-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-blue-600/20 border border-blue-500/40 rounded-xl text-blue-400">
+                    <i class="fa-solid fa-shield-halved text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">
+                        Blue Team Toolset Documentation
+                    </h1>
+                    <p class="text-xs text-gray-400">Võrguliikluse, HTTP, DNS, IP-aadresside ja tavalogide analüüsi tööriistakomplekt</p>
+                </div>
+            </div>
+            <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono rounded-full">
+                v4.0 Extended Edition
+            </span>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-12">
+
+        <section class="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl">
+            <h2 class="text-lg font-bold text-gray-200 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-diagram-project text-blue-400"></i> Analüüsiahela Üldine Töövoog (Workflow)
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-4 bg-gray-950 rounded-xl border border-gray-800">
+                    <div class="text-blue-400 font-bold text-sm mb-1">1. Kogumine & Puhastamine</div>
+                    <p class="text-xs text-gray-400">`pcapng-analys.py` või `vahendaja.py` abil eraldatakse logidest/salvestustest toorandmed või unikaalsed IP-d.</p>
+                </div>
+                <div class="p-4 bg-gray-950 rounded-xl border border-gray-800">
+                    <div class="text-amber-400 font-bold text-sm mb-1">2. Süvaanalüüs & Parsimine</div>
+                    <p class="text-xs text-gray-400">Spetsiifilised skriptid (`http_traffic_analyzer.py`, `dns_andmed.py`, `tavatext-to-csv.py`) parsuvad protokolli/logi andmed.</p>
+                </div>
+                <div class="p-4 bg-gray-950 rounded-xl border border-gray-800">
+                    <div class="text-emerald-400 font-bold text-sm mb-1">3. Rikastamine & Teisendus</div>
+                    <p class="text-xs text-gray-400">`siduja.py` (GeoIP) ning pärsitud andmetest luuakse ühtsed struktureeritud CSV-failid.</p>
+                </div>
+                <div class="p-4 bg-gray-950 rounded-xl border border-gray-800">
+                    <div class="text-purple-400 font-bold text-sm mb-1">4. Visualiseerimine</div>
+                    <p class="text-xs text-gray-400">Visualiseeritakse tulemused veebibrauseris vastavate HTML dashboardide abil (Drag & Drop interaktsioon).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <div class="border-b border-gray-800 pb-3 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-blue-400 flex items-center gap-2">
+                        <i class="fa-solid fa-network-wired text-2xl"></i> 1. Universaalne HTTP Toiming
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Põhimõte: Üldise veebiliikluse (GET, POST jne) analüüs, päringute sisu ja entropia kontroll ning dünaamiline visualiseerimine.
+                    </p>
+                </div>
+                <span class="text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/30 px-3 py-1 rounded-full">Universal Web</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <div class="bg-gray-900 border border-blue-500/30 rounded-2xl p-6 shadow-lg hover:border-blue-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">http_traffic_analyzer.py</h3>
+                        <span class="text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/40 px-2 py-0.5 rounded">PYTHON</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Universaalne HTTP päringute ja payloadide turvaanalüsaator. Parsib erinevaid HTTP meetodeid, kontrollib pakkimist (GZip) või struktuure (JSON, TLS) ning arvutab Shannoni entropia krüptitud või pahatahtliku sisu tuvastamiseks.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Käivitamine:</span><br>
+                        python3 http_traffic_analyzer.py logi.txt
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 border border-emerald-500/30 rounded-2xl p-6 shadow-lg hover:border-emerald-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">http_raport_to_csv.py</h3>
+                        <span class="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded">CONVERTER</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Teisendab `http_traffic_analyzer.py` genereeritud TXT raporti struktureeritud CSV-failiks (semikooloniga eraldatud, UTF-8-BOM). Valmistab andmed ette universaalses vaaturis kuvamiseks.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Käivitamine:</span><br>
+                        python3 http_raport_to_csv.py raport.txt http_analuys.csv
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 border border-purple-500/30 rounded-2xl p-6 shadow-lg hover:border-purple-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">universaalne_vaatur.html</h3>
+                        <span class="text-[10px] font-mono bg-purple-500/20 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded">HTML DASHBOARD</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Interaktiivne BI-tüüpi vaatur veebibrauserile. Võimaldab kasutajal ise valida graafikute andmeallikaid (HTTP meetod, sisu tüüp, entropia, suurus) ja graafiku tüüpe (Doughnut, Bar, Pie) ning filtreerida tabelit.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Kasutamine:</span><br>
+                        Ava brauseris & laadi üles `http_analuys.csv`
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <div class="border-b border-gray-800 pb-3 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-cyan-400 flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-2xl"></i> 2. IP-aadressite ja GeoIP Toiming
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Põhimõte: Võrguliiklusest IP-aadresside eraldamine, filtreerimine, geograafiline rikastamine (GeoIP/ASN) ja geograafiline visualiseerimine.
+                    </p>
+                </div>
+                <span class="text-xs font-mono text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 rounded-full">IP & GeoIP Processing</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div class="bg-gray-900 border border-purple-500/30 rounded-2xl p-6 shadow-lg hover:border-purple-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">pcapng-analys.py</h3>
+                        <span class="text-[10px] font-mono bg-purple-500/20 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded">PCAP PARSER</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Loeb PCAP/PCAPNG faile, eraldab unikaalsed IP-aadresside paari andmed, tuvastab HTTP POST päringud ning otsib selgetekstilisi paroole.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Käivitamine:</span><br>
+                        python3 pcapng-analys.py
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 border border-gray-700 rounded-2xl p-6 shadow-lg hover:border-gray-600 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">vahendaja.py</h3>
+                        <span class="text-[10px] font-mono bg-gray-800 text-gray-300 border border-gray-700 px-2 py-0.5 rounded">IP FILTER</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Lihtne IP-aadresside filtreerimise vahetööriist. Korjab suvalistest tekstifailidest või logidest regulaaravaldise abil välja unikaalsed IPv4 aadressid ja puhastab nimekirja.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Käivitamine:</span><br>
+                        python3 vahendaja.py
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 border border-cyan-500/30 rounded-2xl p-6 shadow-lg hover:border-cyan-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">siduja.py</h3>
+                        <span class="text-[10px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-2 py-0.5 rounded">GEOIP ENRICHMENT</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Võtab puhastatud IP-aadresside nimekirja ja pärib `asn.cymru.com` API kaudu iga IP kohta riigi, internetiteenuse pakkuja (ISP) ning ASN/organisatsiooni andmed, genereerides CSV-faili.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Käivitamine:</span><br>
+                        python3 siduja.py
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 border border-cyan-500/30 rounded-2xl p-6 shadow-lg hover:border-cyan-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">graafik.html</h3>
+                        <span class="text-[10px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-2 py-0.5 rounded">HTML DASHBOARD</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Visuaalne GeoIP dashboard. Kuvab `siduja.py` väljund-CSV põhjal riikide jaotust ringdiagrammina (Doughnut) ning organisatsioonide ja ASN-ide esinemissagedust tulpdiagrammina.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Kasutamine:</span><br>
+                        Ava brauseris & laadi üles `tulemused_IP.csv`
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <div class="border-b border-gray-800 pb-3 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-teal-400 flex items-center gap-2">
+                        <i class="fa-solid fa-dns text-2xl"></i> 3. DNS Päringute ja Domeenide Toiming (`dns` kaust)
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Põhimõte: DNS võrgupakettide logi parsimine, rollide (Klient vs DNS-server) tuvastamine, juurdomeenide klastreerimine ja grupeeritud kuvamine.
+                    </p>
+                </div>
+                <span class="text-xs font-mono text-teal-400 bg-teal-500/10 border border-teal-500/30 px-3 py-1 rounded-full">DNS Inspection</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="bg-gray-900 border border-teal-500/30 rounded-2xl p-6 shadow-lg hover:border-teal-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">dns_andmed.py</h3>
+                        <span class="text-[10px] font-mono bg-teal-500/20 text-teal-300 border border-teal-500/40 px-2 py-0.5 rounded">DNS PARSER</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Eraldab TXT logist DNS pakettide numbrid, IP-aadressid ja pärsitud domeeninimed. Tuvastab automaatselt rolli (päring tehti kliendi poolt või vastus DNS serverilt) ja eraldab peamise juurdomeeni (nt `google.com`). Salvestab tulemused CSV-faili.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Käivitamine (käsurea argumendiga või ilma):</span><br>
+                        python3 dns_andmed.py dns_logi.txt
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 border border-teal-500/30 rounded-2xl p-6 shadow-lg hover:border-teal-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">dns_vaatur.html</h3>
+                        <span class="text-[10px] font-mono bg-teal-500/20 text-teal-300 border border-teal-500/40 px-2 py-0.5 rounded">HTML DASHBOARD</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Interaktiivne vaatur DNS päringute analüüsiks. Võimaldab lohistada (Drag & Drop) `dns_andmed.py` poolt loodud CSV-faili, grupeerida päringuid juurdomeenide kaupa klastritesse, filtreerida IP-de põhjal ning otsida täpseid subdomeene.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Kasutamine:</span><br>
+                        Ava brauseris & laadi üles `dns_logi.csv`
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <div class="border-b border-gray-800 pb-3 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-file-lines text-2xl"></i> 4. Muu / Tavalogi ja Plaintext Toiming (`muu` kaust)
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Põhimõte: Üldiste ja struktureerimata või mitmerealiste tekstilogide (nt SMTP, SSH, süsteemilogid) teisendamine struktureeritud CSV-ks ning interaktiivne analüüs.
+                    </p>
+                </div>
+                <span class="text-xs font-mono text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">Plaintext & Multi-line Logs</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="bg-gray-900 border border-amber-500/30 rounded-2xl p-6 shadow-lg hover:border-amber-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">tavatext-to-csv.py</h3>
+                        <span class="text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded">TEXT PARSER</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Üldotstarbeline tekstilogi teisendaja (ilma väliste sõltuvusteta nagu Pandas). Tuvastab mitmerealisi struktuure (nt SMTP ühenduse plokid, paketi numbrid, IP:Port suunad ja teated) ning tekitab puhta, Exceli-sõbraliku semikooloniga CSV-faili.
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Käivitamine:</span><br>
+                        python3 tavatext-to-csv.py logi.txt
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 border border-amber-500/30 rounded-2xl p-6 shadow-lg hover:border-amber-500/60 transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-gray-100 text-lg">tavatext.html</h3>
+                        <span class="text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded">HTML DASHBOARD</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                        <strong>Tegevus:</strong> Universaalne tekstilogide vaatur brauserile. Tuvastab automaatselt CSV-st võtmed ja väljad, toetab lohistamist (Drag & Drop), võimaldab valida grupeerimise alust (nt IP, pakett, veakood) ning tõstab esile veakoodid (nt SMTP 550 tähistused).
+                    </p>
+                    <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-[11px] text-gray-300">
+                        <span class="text-gray-500"># Kasutamine:</span><br>
+                        Ava brauseris & laadi üles `tavalogi.csv`
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="bg-gray-900 border border-emerald-500/30 rounded-2xl p-6 shadow-xl space-y-6">
+            <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-2xl"></i> Samm-sammuline Tööjuhis Kasutajale
+            </h2>
+            
+            <ol class="space-y-4 text-sm text-gray-300 list-decimal list-inside leading-relaxed">
+                <li class="pl-2">
+                    <strong class="text-white">Töökausta ettevalmistamine:</strong> 
+                    Tee kaustast <code class="bg-gray-950 px-2 py-0.5 rounded text-amber-300">toolbox</code> koopia. Tõsta analüüsitav <code class="bg-gray-950 px-2 py-0.5 rounded text-emerald-300">.pcapng</code> või tekstilogi fail kopeeritud kausta.
+                </li>
+                <li class="pl-2">
+                    <strong class="text-white">Esmane analüüs (PCAPNG puhul):</strong> 
+                    Käivita kopeeritud kaustas skript <code class="bg-gray-950 px-2 py-0.5 rounded text-blue-300">pcapng-analys.py</code> toorandmete kättesaamiseks.
+                </li>
+                <li class="pl-2">
+                    <strong class="text-white">Failide liigutamine alamkaustadesse:</strong> 
+                    Tõsta genereeritud HTTP fail <code class="bg-gray-950 px-2 py-0.5 rounded text-amber-300">http</code> kausta, IP-d <code class="bg-gray-950 px-2 py-0.5 rounded text-amber-300">ip</code> kausta, DNS logid <code class="bg-gray-950 px-2 py-0.5 rounded text-amber-300">dns</code> kausta ning muud tekstilogid <code class="bg-gray-950 px-2 py-0.5 rounded text-amber-300">muu</code> kausta.
+                </li>
+                <li class="pl-2">
+                    <strong class="text-white">HTTP liikluse töötlus (<code class="text-blue-400">http</code> kaustas):</strong>
+                    <ul class="list-disc list-inside ml-6 mt-1 space-y-1 text-xs text-gray-400">
+                        <li>Käivita <code class="bg-gray-950 px-1.5 py-0.5 rounded text-gray-200">http_traffic_analyzer.py</code>.</li>
+                        <li>Käivita <code class="bg-gray-950 px-1.5 py-0.5 rounded text-gray-200">http_raport_to_csv.py</code> (genereerib CSV-faili).</li>
+                        <li>Ava brauseris <code class="bg-gray-950 px-1.5 py-0.5 rounded text-purple-300">universaalne_vaatur.html</code> ja laadi CSV-fail tulemuste vaatamiseks üles.</li>
+                    </ul>
+                </li>
+                <li class="pl-2">
+                    <strong class="text-white">IP-aadresside töötlus (<code class="text-cyan-400">ip</code> kaustas):</strong>
+                    <ul class="list-disc list-inside ml-6 mt-1 space-y-1 text-xs text-gray-400">
+                        <li>Käivita kõigepealt <code class="bg-gray-950 px-1.5 py-0.5 rounded text-gray-200">vahendaja.py</code>.</li>
+                        <li>Käivita seejärel <code class="bg-gray-950 px-1.5 py-0.5 rounded text-gray-200">siduja.py</code>.</li>
+                        <li>Ava brauseris <code class="bg-gray-950 px-1.5 py-0.5 rounded text-cyan-300">graafik.html</code> ja laadi genereeritud CSV üles graafiku vaatamiseks.</li>
+                    </ul>
+                </li>
+                <li class="pl-2">
+                    <strong class="text-white">DNS päringute töötlus (<code class="text-teal-400">dns</code> kaustas):</strong>
+                    <ul class="list-disc list-inside ml-6 mt-1 space-y-1 text-xs text-gray-400">
+                        <li>Käivita <code class="bg-gray-950 px-1.5 py-0.5 rounded text-gray-200">dns_andmed.py sinu_dns_logi.txt</code> (genereerib CSV-faili).</li>
+                        <li>Ava brauseris <code class="bg-gray-950 px-1.5 py-0.5 rounded text-teal-300">dns_vaatur.html</code> ja lohista loodud CSV fail lehele.</li>
+                    </ul>
+                </li>
+                <li class="pl-2">
+                    <strong class="text-white">Muude tekstilogide töötlus (<code class="text-amber-400">muu</code> kaustas):</strong>
+                    <ul class="list-disc list-inside ml-6 mt-1 space-y-1 text-xs text-gray-400">
+                        <li>Käivita <code class="bg-gray-950 px-1.5 py-0.5 rounded text-gray-200">tavatext-to-csv.py logi.txt</code> (genereerib CSV-faili).</li>
+                        <li>Ava brauseris <code class="bg-gray-950 px-1.5 py-0.5 rounded text-amber-300">tavatext.html</code> ja lohista CSV-fail vaaturisse.</li>
+                    </ul>
+                </li>
+            </ol>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-gray-800 mt-12 py-6 text-center text-xs text-gray-500">
+        Blue Team Incident Response & Protocol Inspection Toolkit &copy; 2026
+    </footer>
+
+</body>
+</html>

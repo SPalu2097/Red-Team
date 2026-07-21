@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="et" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Andmete Dashboard + Filtrid</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans min-h-screen p-6">
+
+    <div class="max-w-5xl mx-auto bg-gray-900 border border-gray-800 p-8 rounded-xl shadow-2xl">
+        <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent mb-2 text-center">
+            CSV Andmete Dashboard
+        </h1>
+        <p class="text-gray-400 text-center mb-6">Laadi oma CSV fail üles, et andmed visuaalseks muuta.</p>
+
+        <div class="space-y-4 mb-8 bg-gray-950/60 border border-gray-800 p-4 rounded-xl">
+            <div>
+                <label class="block text-sm font-semibold text-gray-300 mb-2">Vali CSV fail arvutist:</label>
+                <input type="file" id="csvFile" accept=".csv" 
+                    class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer transition">
+            </div>
+        </div>
+
+        <div id="dashboard" class="hidden space-y-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="border border-gray-800 p-4 rounded-xl bg-gray-950/40 shadow-sm">
+                    <h3 class="text-lg font-bold text-gray-200 mb-4 text-center">IP-aadresside jaotus riikide kaupa</h3>
+                    <div class="relative h-64 flex justify-center">
+                        <canvas id="countryChart"></canvas>
+                    </div>
+                </div>
+                <div class="border border-gray-800 p-4 rounded-xl bg-gray-950/40 shadow-sm">
+                    <h3 class="text-lg font-bold text-gray-200 mb-4 text-center">Top Organisatsioonid / ISP</h3>
+                    <div class="relative h-64 flex justify-center">
+                        <canvas id="orgChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-950/60 p-4 rounded-xl border border-gray-800 shadow-sm space-y-4">
+                <h4 class="font-bold text-gray-400 text-sm uppercase tracking-wider">Tabeli filtrid</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="tableSearch" class="block text-xs font-semibold text-gray-300 mb-1">1. Otsi teksti (IP, ASN, Org jne):</label>
+                        <input type="text" id="tableSearch" 
+                            class="w-full p-2 text-sm border border-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-900 text-gray-100 placeholder-gray-500" 
+                            placeholder="Trüki midagi siia...">
+                    </div>
+                    <div>
+                        <label for="countryFilter" class="block text-xs font-semibold text-gray-300 mb-1">2. Filtreeri riigi järgi:</label>
+                        <select id="countryFilter" 
+                            class="w-full p-2 text-sm border border-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-900 text-gray-100">
+                            <option value="">Kõik riigid</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-gray-800 rounded-xl overflow-hidden shadow-sm">
+                <h3 class="text-lg font-bold text-gray-200 p-4 bg-gray-950/80 border-b border-gray-800 flex justify-between items-center">
+                    <span>Andmetabel</span>
+                    <span class="text-sm font-normal text-gray-400">Kuvatakse <span id="filteredCount" class="font-bold text-blue-400">0</span> / <span id="totalCount">0</span> reast</span>
+                </h3>
+                <div class="overflow-x-auto max-h-80">
+                    <table class="min-w-full divide-y divide-gray-800 text-sm">
+                        <thead class="bg-gray-950 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-4 py-2 text-left font-semibold text-gray-300">IP Aadress</th>
+                                <th class="px-4 py-2 text-left font-semibold text-gray-300">Riik</th>
+                                <th class="px-4 py-2 text-left font-semibold text-gray-300">ASN / ISP</th>
+                                <th class="px-4 py-2 text-left font-semibold text-gray-300">Organisatsioon</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="bg-gray-900 divide-y divide-gray-800">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let globalParsedData = []; 
+        let countryChartInstance = null;
+        let orgChartInstance = null;
+
+        // Globaalsed teemavärvid Chart.js jaoks (Dark mode)
+        Chart.defaults.color = '#9CA3AF'; // text-gray-400
+        Chart.defaults.borderColor = '#1F2937'; // border-gray-800
+
+        document.getElementById('csvFile').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            Papa.parse(file, {
+                skipEmptyLines: true,
+                complete: function(results) { 
+                    processData(results.data); 
+                },
+                error: function(error) {
+                    alert("Viga faili lugemisel: " + error.message);
+                }
+            });
+        });
+
+        function processData(data) {
+            globalParsedData = data.filter(row => row.length >= 4 && row[0].trim() !== "");
+            
+            if(globalParsedData.length === 0) {
+                alert("Sobivaid andmeid ei leitud! Veendu, et tegu on õige CSV-failiga.");
+                document.getElementById('dashboard').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('totalCount').innerText = globalParsedData.length;
+
+            populateCountryFilter(globalParsedData);
+            drawCharts(globalParsedData);
+
+            document.getElementById('tableSearch').value = '';
+            document.getElementById('countryFilter').value = '';
+            filterAndRenderTable(); 
+        }
+
+        function populateCountryFilter(data) {
+            const filterSelect = document.getElementById('countryFilter');
+            filterSelect.innerHTML = '<option value="">Kõik riigid</option>';
+            
+            const uniqueCountries = [...new Set(data.map(row => row[1] ? row[1].trim() : 'Teadmata'))].sort();
+            
+            uniqueCountries.forEach(country => {
+                const opt = document.createElement('option');
+                opt.value = country;
+                opt.innerText = country;
+                filterSelect.appendChild(opt);
+            });
+        }
+
+        function filterAndRenderTable() {
+            const searchKeyword = document.getElementById('tableSearch').value.toLowerCase().trim();
+            const selectedCountry = document.getElementById('countryFilter').value;
+
+            const filteredData = globalParsedData.filter(row => {
+                const ip = row[0] ? row[0].toLowerCase() : '';
+                const country = row[1] ? row[1].trim() : 'Teadmata';
+                const asn = row[2] ? row[2].toLowerCase() : '';
+                const org = row[3] ? row[3].toLowerCase() : '';
+
+                const matchesCountry = selectedCountry === "" || country === selectedCountry;
+                const matchesSearch = searchKeyword === "" || 
+                                     ip.includes(searchKeyword) || 
+                                     country.toLowerCase().includes(searchKeyword) || 
+                                     asn.includes(searchKeyword) || 
+                                     org.includes(searchKeyword);
+
+                return matchesCountry && matchesSearch;
+            });
+
+            document.getElementById('filteredCount').innerText = filteredData.length;
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = "";
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-gray-500 italic">Ühtegi rida ei vasta otsingule.</td></tr>`;
+                return;
+            }
+
+            filteredData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-800/50 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-4 py-2 font-mono text-indigo-300">${row[0]}</td>
+                    <td class="px-4 py-2"><span class="bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded text-xs font-bold border border-blue-500/30">${row[1]}</span></td>
+                    <td class="px-4 py-2 text-gray-400">${row[2]}</td>
+                    <td class="px-4 py-2 font-medium text-gray-200">${row[3]}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById('tableSearch').addEventListener('input', filterAndRenderTable);
+        document.getElementById('countryFilter').addEventListener('change', filterAndRenderTable);
+
+        function drawCharts(data) {
+            const countries = {};
+            const organizations = {};
+
+            data.forEach(row => {
+                const country = row[1] ? row[1].trim() : 'Teadmata';
+                const org = row[3] ? row[3].trim() : 'Teadmata';
+                countries[country] = (countries[country] || 0) + 1;
+                organizations[org] = (organizations[org] || 0) + 1;
+            });
+
+            if (countryChartInstance) countryChartInstance.destroy();
+            if (orgChartInstance) orgChartInstance.destroy();
+
+            const ctxCountry = document.getElementById('countryChart').getContext('2d');
+            countryChartInstance = new Chart(ctxCountry, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(countries),
+                    datasets: [{
+                        data: Object.values(countries),
+                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
+                        borderWidth: 2,
+                        borderColor: '#111827' // gray-900
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctxOrg = document.getElementById('orgChart').getContext('2d');
+            orgChartInstance = new Chart(ctxOrg, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(organizations),
+                    datasets: [{
+                        label: 'IP-de arv',
+                        data: Object.values(organizations),
+                        backgroundColor: '#6366F1',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

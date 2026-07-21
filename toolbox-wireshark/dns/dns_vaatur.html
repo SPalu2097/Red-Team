@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Päringute Interaktiivne Vaatur</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans min-h-screen">
+
+    <header class="border-b border-gray-800 bg-gray-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-cyan-600/20 border border-cyan-500/40 rounded-xl text-cyan-400">
+                    <i class="fa-solid fa-network-wired text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                        DNS Päringute Analüüsi Armatuurlaud
+                    </h1>
+                    <p class="text-xs text-gray-400">Grupeeritud võrguliikluse ja domeenide analüsaator</p>
+                </div>
+            </div>
+            <span class="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono rounded-full">
+                DNS Logi v2.0 (Dynamic CSV)
+            </span>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+        <section class="bg-gray-900 border-2 border-dashed border-gray-700 hover:border-cyan-500/80 rounded-2xl p-8 text-center transition-all cursor-pointer relative" id="dropZone">
+            <input type="file" id="csvFileInput" accept=".csv" class="hidden">
+            <div class="space-y-3 pointer-events-none">
+                <div class="w-14 h-14 mx-auto bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-full flex items-center justify-center text-2xl">
+                    <i class="fa-solid fa-file-csv"></i>
+                </div>
+                <div>
+                    <p class="text-base font-semibold text-gray-200" id="uploadStatusText">
+                        Lohista oma CSV-fail siia või <span class="text-cyan-400 underline">klõpsa valimiseks</span>
+                    </p>
+                    <p class="text-xs text-gray-400 mt-1">Toetatud on `dns_andmed.py` genereeritud CSV-failid (semikooloniga eraldatud)</p>
+                </div>
+            </div>
+        </section>
+
+        <div id="statsContainer" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-lg">
+                <div class="text-xs font-medium text-gray-400 mb-1">Pakettide koguarv</div>
+                <div class="text-2xl font-bold text-white" id="stat-total">0</div>
+            </div>
+            <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-lg">
+                <div class="text-xs font-medium text-gray-400 mb-1">Unikaalsed Domeenid</div>
+                <div class="text-2xl font-bold text-cyan-400" id="stat-domains">0</div>
+            </div>
+            <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-lg">
+                <div class="text-xs font-medium text-gray-400 mb-1">Unikaalsed Juurdomeenid</div>
+                <div class="text-2xl font-bold text-indigo-400" id="stat-roots">0</div>
+            </div>
+            <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-lg">
+                <div class="text-xs font-medium text-gray-400 mb-1">Seotud IP-d</div>
+                <div class="text-2xl font-bold text-emerald-400" id="stat-ips">0</div>
+            </div>
+        </div>
+
+        <section id="controlsContainer" class="hidden bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex flex-col sm:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full sm:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Otsi domeeni, paketti või IP-d..." 
+                        class="w-full bg-gray-950 border border-gray-800 rounded-xl pl-9 pr-4 py-2 text-sm text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors">
+                </div>
+                
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <select id="ipFilter" class="bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-300 focus:outline-none focus:border-cyan-500">
+                        <option value="">Kõik IP-d</option>
+                    </select>
+                    <select id="viewMode" class="bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-300 focus:outline-none focus:border-cyan-500">
+                        <option value="grouped">Grupeeritud juurdomeenide kaupa</option>
+                        <option value="flat">Lame tabel (kõik pakettide kaupa)</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section id="tableSection" class="hidden bg-gray-900 border border-gray-800 rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-200 flex items-center gap-2">
+                    <i class="fa-solid fa-list text-cyan-400"></i> DNS Pakettide ja Domeenide Ülevaade
+                </h2>
+            </div>
+            
+            <div class="overflow-x-auto" id="tableContainer">
+                </div>
+        </section>
+
+    </main>
+
+    <script>
+        let rawData = [];
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('csvFileInput');
+
+        // Lohistamise sündmused
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-cyan-400', 'bg-cyan-500/5');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-cyan-400', 'bg-cyan-500/5');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-cyan-400', 'bg-cyan-500/5');
+            
+            if (e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.name.endsWith('.csv')) {
+                alert('Palun laadi üles .csv laiendiga fail!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                parseCSV(e.target.result);
+                document.getElementById('uploadStatusText').innerHTML = 
+                    `Aktiivne fail: <span class="text-cyan-400 font-bold">${file.name}</span> (Vahetamiseks lohista uus fail)`;
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split(/\r?\n/);
+            if (lines.length < 2) {
+                alert('CSV-fail on tühi või vigane!');
+                return;
+            }
+
+            // Eraldaja automaatne tuvastamine (semikoolon või koma)
+            const delimiter = lines[0].includes(';') ? ';' : ',';
+            const headers = lines[0].split(delimiter).map(h => h.replace(/^"|"$/g, '').trim());
+
+            rawData = [];
+            const ipSet = new Set();
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const values = lines[i].split(delimiter).map(v => v.replace(/^"|"$/g, '').trim());
+                
+                const row = {};
+                headers.forEach((header, index) => {
+                    row[header] = values[index] || '';
+                });
+
+                if (row['IP_Aadress']) ipSet.add(row['IP_Aadress']);
+                rawData.push(row);
+            }
+
+            // Täidame IP filtri valikud
+            const ipFilterSelect = document.getElementById('ipFilter');
+            ipFilterSelect.innerHTML = '<option value="">Kõik IP-d</option>';
+            ipSet.forEach(ip => {
+                const opt = document.createElement('option');
+                opt.value = ip;
+                opt.textContent = ip;
+                ipFilterSelect.appendChild(opt);
+            });
+
+            // Näitame peidetud sektsioone
+            document.getElementById('statsContainer').classList.remove('hidden');
+            document.getElementById('controlsContainer').classList.remove('hidden');
+            document.getElementById('tableSection').classList.remove('hidden');
+
+            renderData();
+        }
+
+        function updateStats(data) {
+            document.getElementById('stat-total').innerText = data.length;
+            const domains = new Set(data.map(d => d.Subdomeen_ja_Domeen));
+            const roots = new Set(data.map(d => d.Juurdomeen));
+            const ips = new Set(data.map(d => d.IP_Aadress));
+            
+            document.getElementById('stat-domains').innerText = domains.size;
+            document.getElementById('stat-roots').innerText = roots.size;
+            document.getElementById('stat-ips').innerText = ips.size;
+        }
+
+        function renderData() {
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const ipVal = document.getElementById('ipFilter').value;
+            const viewMode = document.getElementById('viewMode').value;
+            const container = document.getElementById('tableContainer');
+
+            let filtered = rawData.filter(row => {
+                const domainMatch = (row.Subdomeen_ja_Domeen || '').toLowerCase().includes(searchVal);
+                const ipMatch = (row.IP_Aadress || '').toLowerCase().includes(searchVal);
+                const pktMatch = (row.Paketi_nr || '').toString().includes(searchVal);
+                
+                const matchesSearch = domainMatch || ipMatch || pktMatch;
+                const matchesIP = !ipVal || row.IP_Aadress === ipVal;
+                return matchesSearch && matchesIP;
+            });
+
+            updateStats(filtered);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-gray-500 text-sm">Tulemusi ei leitud.</div>`;
+                return;
+            }
+
+            if (viewMode === 'flat') {
+                let html = `
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-950 text-gray-400 text-xs uppercase border-b border-gray-800">
+                            <tr>
+                                <th class="p-4">Pakett #</th>
+                                <th class="p-4">IP Aadress</th>
+                                <th class="p-4">Roll</th>
+                                <th class="p-4">Täielik Domeen</th>
+                                <th class="p-4">Juurdomeen</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800/50">
+                `;
+                filtered.forEach(row => {
+                    const badgeClass = row.Roll && row.Roll.includes('Klient')
+                        ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' 
+                        : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400';
+                    html += `
+                        <tr class="hover:bg-gray-800/30 transition-colors">
+                            <td class="p-4 font-mono text-cyan-400">#${row.Paketi_nr}</td>
+                            <td class="p-4 font-mono">${row.IP_Aadress}</td>
+                            <td class="p-4"><span class="px-2.5 py-1 text-[11px] border rounded-full font-mono ${badgeClass}">${row.Roll}</span></td>
+                            <td class="p-4 font-semibold text-gray-200">${row.Subdomeen_ja_Domeen}</td>
+                            <td class="p-4 font-mono text-xs text-gray-400">${row.Juurdomeen}</td>
+                        </tr>
+                    `;
+                });
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            } else {
+                // Grupeeritud vaade
+                const grouped = {};
+                filtered.forEach(row => {
+                    const rootKey = row.Juurdomeen || 'Muu';
+                    if (!grouped[rootKey]) {
+                        grouped[rootKey] = [];
+                    }
+                    grouped[rootKey].push(row);
+                });
+
+                let html = `<div class="p-6 space-y-6">`;
+                for (const [root, items] of Object.entries(grouped)) {
+                    html += `
+                        <div class="bg-gray-950 border border-gray-800 rounded-xl overflow-hidden shadow-md">
+                            <div class="bg-gray-900/90 px-5 py-3 border-b border-gray-800 flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-globe text-cyan-400"></i>
+                                    <span class="font-bold text-gray-200 text-base">${root}</span>
+                                </div>
+                                <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs px-2.5 py-0.5 rounded-full font-mono">
+                                    ${items.length} päringut/vastust
+                                </span>
+                            </div>
+                            <div class="p-4">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="text-gray-500 uppercase border-b border-gray-800/60">
+                                        <tr>
+                                            <th class="pb-2">Pakett</th>
+                                            <th class="pb-2">IP & Roll</th>
+                                            <th class="pb-2">Täpne Subdomeen / Päring</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-800/40">
+                    `;
+                    items.forEach(item => {
+                        const isClient = item.Roll && item.Roll.includes('Klient');
+                        const badge = isClient 
+                            ? `<span class="text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">${item.Roll} (${item.IP_Aadress})</span>`
+                            : `<span class="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">${item.Roll} (${item.IP_Aadress})</span>`;
+                        
+                        html += `
+                            <tr class="hover:bg-gray-900/40 transition-colors">
+                                <td class="py-2.5 font-mono text-cyan-400">#${item.Paketi_nr}</td>
+                                <td class="py-2.5 font-mono">${badge}</td>
+                                <td class="py-2.5 text-gray-300 font-semibold">${item.Subdomeen_ja_Domeen}</td>
+                            </tr>
+                        `;
+                    });
+                    html += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+                container.innerHTML = html;
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', renderData);
+        document.getElementById('ipFilter').addEventListener('change', renderData);
+        document.getElementById('viewMode').addEventListener('change', renderData);
+    </script>
+</body>
+</html>

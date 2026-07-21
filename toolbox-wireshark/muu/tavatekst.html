@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universaalne Tekstilogi & CSV Vaatur</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans min-h-screen">
+
+    <header class="border-b border-gray-800 bg-gray-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-indigo-600/20 border border-indigo-500/40 rounded-xl text-indigo-400">
+                    <i class="fa-solid fa-terminal text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        Universaalne Logi & Plaintext Vaatur
+                    </h1>
+                    <p class="text-xs text-gray-400">Tuvastab automaatselt plokid, võtmed ja võimaldab reaalajas grupeerimist</p>
+                </div>
+            </div>
+            <span class="px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-mono rounded-full">
+                v3.0 Multi-Format Parser
+            </span>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+        <section class="bg-gray-900 border-2 border-dashed border-gray-700 hover:border-indigo-500 rounded-2xl p-8 text-center transition-all cursor-pointer relative" id="dropZone">
+            <input type="file" id="fileInput" class="hidden">
+            <div class="space-y-3 pointer-events-none">
+                <div class="w-14 h-14 mx-auto bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 rounded-full flex items-center justify-center text-2xl">
+                    <i class="fa-solid fa-file-code"></i>
+                </div>
+                <div>
+                    <p class="text-base font-semibold text-gray-200" id="uploadStatus">
+                        Lohista oma logi-, tekst- või CSV-fail siia või <span class="text-indigo-400 underline">klõpsa valimiseks</span>
+                    </p>
+                    <p class="text-xs text-gray-400 mt-1">Toetab SMTP / DNS tekstiloge ja standardseid .txt/.csv faile</p>
+                </div>
+            </div>
+        </section>
+
+        <div id="controlsContainer" class="hidden space-y-6">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-lg">
+                    <div class="text-xs font-medium text-gray-400 mb-1">Kirjete / Plokkide arv</div>
+                    <div class="text-2xl font-bold text-white" id="statTotal">0</div>
+                </div>
+                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-lg">
+                    <div class="text-xs font-medium text-gray-400 mb-1">Tuvastatud Väljad</div>
+                    <div class="text-2xl font-bold text-indigo-400" id="statFields">0</div>
+                </div>
+                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-lg">
+                    <div class="text-xs font-medium text-gray-400 mb-1">Aktiivseid Gruppe</div>
+                    <div class="text-2xl font-bold text-emerald-400" id="statGroups">0</div>
+                </div>
+            </div>
+
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl flex flex-col sm:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full sm:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Otsi tekstist, IP-st, käsust..." 
+                        class="w-full bg-gray-950 border border-gray-800 rounded-xl pl-9 pr-4 py-2 text-sm text-gray-200 focus:outline-none focus:border-indigo-500 transition-colors">
+                </div>
+                
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <label class="text-xs text-gray-400 font-medium whitespace-nowrap">Grupeeri välja järgi:</label>
+                    <select id="groupBySelect" class="bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-xs text-indigo-300 focus:outline-none focus:border-indigo-500">
+                        </select>
+                </div>
+            </div>
+
+        </div>
+
+        <section id="resultsContainer" class="hidden space-y-6">
+            </section>
+
+    </main>
+
+    <script>
+        let parsedRecords = [];
+        let availableFields = new Set();
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-indigo-400'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-indigo-400'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-indigo-400');
+            if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                parseText(e.target.result);
+                document.getElementById('uploadStatus').innerHTML = 
+                    `Aktiivne fail: <span class="text-indigo-400 font-bold">${file.name}</span>`;
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        // Targa teksti parser (Toetab nii SMTP plokke kui tavalisi ridu)
+        function parseText(text) {
+            parsedRecords = [];
+            availableFields = new Set();
+
+            // Kontrollime, kas tegemist on sektsioonipõhise logiga (nt SMTP '---' eraldajatega)
+            if (text.includes('---')) {
+                const blocks = text.split(/--------------------------------------------------/);
+
+                blocks.forEach(block => {
+                    const lines = block.trim().split(/\r?\n/).filter(l => l.trim().length > 0);
+                    if (lines.length === 0) return;
+
+                    let record = {};
+                    let currentKey = "Sisu";
+
+                    lines.forEach(line => {
+                        // Tuvastame päise: --- SMTP TEKST (Pakett #1101006) ---
+                        const headerMatch = line.match(/---\s*(.*?)\s*\((.*?)\)\s*---/);
+                        if (headerMatch) {
+                            record["Tüüp"] = headerMatch[1];
+                            record["Pakett"] = headerMatch[2];
+                            availableFields.add("Tüüp");
+                            availableFields.add("Pakett");
+                            return;
+                        }
+
+                        // Tuvastame Võti: Väärtus paarid (nt Ühendus: ... või Andmed: ...)
+                        if (line.includes(':')) {
+                            const firstColon = line.indexOf(':');
+                            const key = line.substring(0, firstColon).trim();
+                            const val = line.substring(firstColon + 1).trim();
+
+                            // Kui väli on "Ühendus", eraldame mugavuseks ka IP-d
+                            if (key === "Ühendus" && val.includes("->")) {
+                                const parts = val.split("->").map(p => p.trim());
+                                record["Allikas (IP:Port)"] = parts[0];
+                                record["Sihtkoht (IP:Port)"] = parts[1];
+                                availableFields.add("Allikas (IP:Port)");
+                                availableFields.add("Sihtkoht (IP:Port)");
+                            }
+
+                            record[key] = val;
+                            availableFields.add(key);
+                            currentKey = key;
+                        } else {
+                            // Kui on mitmerealine tekst (nt 250-STARTTLS), liidame eelnevale võtmele
+                            if (record[currentKey]) {
+                                record[currentKey] += "\n" + line;
+                            }
+                        }
+                    });
+
+                    if (Object.keys(record).length > 0) {
+                        parsedRecords.push(record);
+                    }
+                });
+            } else {
+                // Tavaliste üherealiste logide / CSV parser
+                const lines = text.trim().split(/\r?\n/);
+                lines.forEach((line, idx) => {
+                    if (!line.trim()) return;
+                    parsedRecords.push({ "Rida": idx + 1, "Sisu": line });
+                    availableFields.add("Sisu");
+                });
+            }
+
+            setupControls();
+            render();
+        }
+
+        function setupControls() {
+            const select = document.getElementById('groupBySelect');
+            select.innerHTML = '';
+
+            availableFields.forEach(field => {
+                const opt = document.createElement('option');
+                opt.value = field;
+                opt.textContent = field;
+                select.appendChild(opt);
+            });
+
+            // Vaikimisi grupeerimine
+            if (availableFields.has("Ühendus")) select.value = "Ühendus";
+            else if (availableFields.has("Pakett")) select.value = "Pakett";
+
+            document.getElementById('controlsContainer').classList.remove('hidden');
+            document.getElementById('resultsContainer').classList.remove('hidden');
+        }
+
+        function render() {
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const groupKey = document.getElementById('groupBySelect').value;
+            const container = document.getElementById('resultsContainer');
+
+            // Filtreerimine
+            let filtered = parsedRecords.filter(rec => {
+                return Object.values(rec).some(v => String(v).toLowerCase().includes(searchVal));
+            });
+
+            // Grupeerimine
+            const grouped = {};
+            filtered.forEach(rec => {
+                const groupName = rec[groupKey] || 'Määratlemata';
+                if (!grouped[groupName]) grouped[groupName] = [];
+                grouped[groupName].push(rec);
+            });
+
+            // Statistika uuendamine
+            document.getElementById('statTotal').innerText = filtered.length;
+            document.getElementById('statFields').innerText = availableFields.size;
+            document.getElementById('statGroups').innerText = Object.keys(grouped).length;
+
+            if (Object.keys(grouped).length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-gray-500">Andmeid ei leitud.</div>`;
+                return;
+            }
+
+            let html = '';
+            for (const [groupTitle, items] of Object.entries(grouped)) {
+                html += `
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
+                        <div class="bg-gray-800/60 px-6 py-4 border-b border-gray-800 flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-folder-open text-indigo-400"></i>
+                                <span class="font-bold text-gray-200">${escapeHtml(groupTitle)}</span>
+                            </div>
+                            <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs px-3 py-1 rounded-full font-mono">
+                                ${items.length} kirjet
+                            </span>
+                        </div>
+                        <div class="p-6 space-y-4">
+                `;
+
+                items.forEach(item => {
+                    const isError = JSON.stringify(item).includes('550') || JSON.stringify(item).includes('blocked');
+                    const statusClass = isError ? 'border-red-500/40 bg-red-500/5' : 'border-gray-800 bg-gray-950/60';
+
+                    html += `
+                        <div class="border ${statusClass} rounded-xl p-4 space-y-2 text-xs font-mono">
+                            <div class="flex justify-between items-center border-b border-gray-800/80 pb-2 text-gray-400">
+                                <span>${item['Pakett'] ? 'Pakett: ' + item['Pakett'] : 'Kirje'}</span>
+                                <span class="text-indigo-400 font-semibold">${item['Ühendus'] || ''}</span>
+                            </div>
+                            <div class="text-gray-300 whitespace-pre-wrap leading-relaxed">${escapeHtml(item['Andmed'] || item['Sisu'] || JSON.stringify(item, null, 2))}</div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        document.getElementById('searchInput').addEventListener('input', render);
+        document.getElementById('groupBySelect').addEventListener('change', render);
+    </script>
+</body>
+</html>
